@@ -601,9 +601,23 @@ Sinta-se livre para fork, testes e PRs — mantenha as **regras de honestidade**
 
 ---
 
-## 📚 Documentação técnica
+## 📚 Documentação
 
-- [Camada de IA (Fase 1, 2 e roadmap)](docs/ia.md)
+Suíte completa (mesmo modelo do PeabiruJobs / Tera AIPL), adaptada ao CareerTwin:
+
+| Documento | Conteúdo |
+|-----------|----------|
+| **[docs/](docs/README.md)** | Índice de toda a documentação |
+| [One Page](docs/one-page.md) | Visão e discovery |
+| [PRD](docs/prd.md) | Requisitos do MVP |
+| [Produto](docs/produto.md) | Personas e user stories |
+| [Jornada](docs/jornada-usuario.md) | Jornada emocional + telas |
+| [Arquitetura](docs/arquitetura.md) | Stack e ADRs |
+| [IA](docs/ia.md) | 3 prompts, schema, jargões |
+| [Segurança](docs/seguranca.md) | RLS, auth, storage |
+| [DevOps](docs/devops.md) | Vercel, envs, deploy |
+| [Onboarding](docs/onboarding.md) | Setup em &lt; 1h |
+| [Claude Code](docs/claude-code.md) | Contribuir com agente |
 
 ## 💚 Princípio final
 
