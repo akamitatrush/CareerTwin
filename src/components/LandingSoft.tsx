@@ -154,15 +154,9 @@ export function LandingSoft() {
               Brasil · mentor de carreira com IA
             </p>
 
-            <div className="site-fade-up mx-auto mb-8 flex justify-center" style={{ animationDelay: "0.05s" }}>
-              <div className="rounded-[20px] border border-[var(--site-border)] bg-[var(--site-card-bg)] p-5 sm:p-7 shadow-[0_8px_32px_rgba(0,0,0,0.32)]">
-                <Logo href={null} size="hero" centered priority />
-              </div>
-            </div>
-
             <h1
               className="site-h-display site-fade-up mx-auto max-w-[18ch] text-[clamp(2.25rem,5.5vw,3.75rem)]"
-              style={{ animationDelay: "0.1s" }}
+              style={{ animationDelay: "0.05s" }}
             >
               Pare de mandar CV genérico.{" "}
               <em className="not-italic text-[var(--site-accent)] sm:italic">
