@@ -44,6 +44,7 @@ export async function generateCareerAnalysis(
           error: "Resposta da IA inválida; usando análise simulada.",
         };
       }
+      console.info(`[generateCareerAnalysis] ok provider=${llm.name} score=${parsed.data.summary.overall_score}`);
       return { result: parsed.data, provider: llm.name, usedFallback: false };
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erro na API de IA";

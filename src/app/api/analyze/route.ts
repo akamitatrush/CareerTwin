@@ -60,6 +60,16 @@ export async function POST(request: Request) {
       .update({ status: "processing" })
       .eq("id", body.analysis_id);
 
+    console.info("[api/analyze] start", {
+      analysis_id: body.analysis_id,
+      user_id: user.id,
+      area: body.target_area || analysis.target_area,
+      has_resume: Boolean(body.resume_text?.trim()),
+      has_linkedin: Boolean(body.linkedin_text?.trim()),
+      has_job: Boolean(body.job_description_text?.trim()),
+      jargons: market_terms.length,
+    });
+
     const { result, provider, usedFallback, error: aiError } = await generateCareerAnalysis({
       user_id: user.id,
       analysis_id: body.analysis_id,
@@ -73,6 +83,16 @@ export async function POST(request: Request) {
       job_description_text: body.job_description_text || "",
       complementary_files_text: body.complementary_files_text || "",
       market_terms,
+    });
+
+    console.info("[api/analyze] done", {
+      analysis_id: body.analysis_id,
+      provider,
+      usedFallback,
+      overall_score: result.summary.overall_score,
+      confidence: result.summary.confidence,
+      recs: result.recommendations.length,
+      warning: aiError,
     });
 
     await persistAnalysisResult(supabase, body.analysis_id, result);

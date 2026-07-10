@@ -313,9 +313,31 @@ export function AnalysisWizard() {
         }),
       });
 
-      const json = await res.json();
+      const json = (await res.json()) as {
+        error?: string;
+        provider?: string;
+        usedFallback?: boolean;
+        warning?: string;
+        overall_score?: number;
+        analysis_id?: string;
+      };
       if (!res.ok) {
         throw new Error(json.error || "Falha ao gerar análise.");
+      }
+
+      // Observabilidade (DevTools → Console): quem gerou a análise
+      console.info("[CareerTwin análise]", {
+        analysis_id: json.analysis_id ?? analysis.id,
+        provider: json.provider,
+        usedFallback: json.usedFallback,
+        overall_score: json.overall_score,
+        warning: json.warning,
+      });
+      if (json.usedFallback) {
+        console.warn(
+          "[CareerTwin] Fallback mock ativo — Grok/OpenAI falhou ou JSON inválido.",
+          json.warning
+        );
       }
 
       router.push(`/analise/${analysis.id}`);
