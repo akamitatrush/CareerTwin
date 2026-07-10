@@ -348,3 +348,16 @@ h3,
 .landing-soft .site-fade-up {
   animation: siteFadeUp 0.6s var(--ease) both;
 }
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-\[marquee_28s_linear_infinite\] {
+  animation: marquee 28s linear infinite;
+}

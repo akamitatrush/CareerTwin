@@ -214,7 +214,8 @@ const cardVariants = cva(
           "hover:border-orange-200 hover:shadow-[0_12px_32px_rgba(255,89,34,0.08),0_0_0_1px_rgba(255,89,34,0.08)]",
           "hover:-translate-y-0.5",
         ].join(" "),
-        brand: "border-orange-100 bg-gradient-to-br from-white to-primary-soft/50 shadow-[var(--shadow)]",
+        brand:
+          "border-orange-100 bg-gradient-to-br from-white to-primary-soft/50 shadow-[var(--shadow)] dark:border-orange-500/20 dark:from-card dark:to-primary-soft/40",
       },
       padding: {
         none: "p-0",
