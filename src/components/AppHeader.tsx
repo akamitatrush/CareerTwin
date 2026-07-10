@@ -34,7 +34,7 @@ function Logo({ href = "/", light = false }: { href?: string; light?: boolean })
           light ? "text-white" : "text-foreground"
         )}
       >
-        Twin<span className={light ? "text-teal-300" : "text-primary"}>Jobs</span>
+        Career<span className={light ? "text-teal-300" : "text-primary"}>Twin</span>
       </span>
     </Link>
   );

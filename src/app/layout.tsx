@@ -16,7 +16,7 @@ const display = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "TwinJobs — Mentor de carreira com IA",
+  title: "CareerTwin — Mentor de carreira com IA",
   description:
     "Analise currículo, LinkedIn e vagas. Receba recomendações, diagnóstico de aderência e plano de evolução profissional. Sem promessas de contratação.",
 };

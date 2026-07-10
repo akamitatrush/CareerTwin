@@ -45,7 +45,7 @@ export default function LandingPage() {
               </h1>
 
               <p className="animate-fade-up-delay-2 mt-6 max-w-xl text-base leading-relaxed text-zinc-200 sm:text-lg">
-                TwinJobs analisa sua trajetória real, mede aderência a cargos e vagas e
+                CareerTwin analisa sua trajetória real, mede aderência a cargos e vagas e
                 monta um plano de evolução — sem inventar experiência e sem vender
                 contratação.
               </p>
@@ -310,7 +310,7 @@ export default function LandingPage() {
                   Compromisso de honestidade
                 </h2>
                 <p className="mt-4 max-w-lg text-zinc-200 leading-relaxed">
-                  TwinJobs não promete contratação e não inventa experiências. A proposta é
+                  CareerTwin não promete contratação e não inventa experiências. A proposta é
                   ajudar você a comunicar melhor sua trajetória e decidir com estratégia.
                 </p>
                 <ul className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -388,7 +388,7 @@ export default function LandingPage() {
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-white">
               <Sparkles className="h-3.5 w-3.5" />
             </span>
-            TwinJobs
+            CareerTwin
           </div>
           <p className="text-sm text-muted">
             Mentor de carreira · © {new Date().getFullYear()} · Sem promessas de contratação

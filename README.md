@@ -1,4 +1,4 @@
-# 🧭 TwinJobs
+# 🧭 CareerTwin
 
 <p align="center">
   <strong>Seu gêmeo de carreira com IA</strong><br/>
@@ -30,7 +30,7 @@
 
 ## 📌 Em uma frase
 
-> O **TwinJobs** analisa o que a pessoa **já tem** (currículo, LinkedIn, cargo-alvo e opcionalmente uma vaga) e devolve um **diagnóstico acionável**: o que melhorar, se o perfil adere ao cargo, como comunicar melhor a experiência e um **plano de evolução** — **sem prometer emprego** e **sem inventar trajetória**.
+> O **CareerTwin** analisa o que a pessoa **já tem** (currículo, LinkedIn, cargo-alvo e opcionalmente uma vaga) e devolve um **diagnóstico acionável**: o que melhorar, se o perfil adere ao cargo, como comunicar melhor a experiência e um **plano de evolução** — **sem prometer emprego** e **sem inventar trajetória**.
 
 ---
 
@@ -79,7 +79,7 @@ Se você **quer rodar na máquina**, pule para [Subir localmente](#-subir-localm
 
 ### Visão do produto
 
-**Nome:** TwinJobs (“gêmeo” profissional + jobs)  
+**Nome:** CareerTwin (gêmeo de carreira — seu “twin” profissional)  
 **Tipo:** B2C web  
 **Mercado:** Brasil (UI 100% pt-BR)  
 **Proposta de valor:** clareza de posicionamento na recolocação, com honestidade.
@@ -163,7 +163,7 @@ Um fluxo guiado que transforma materiais reais em:
 
 ```mermaid
 flowchart TD
-  A([👤 Entra no TwinJobs]) --> B{Tem conta?}
+  A([👤 Entra no CareerTwin]) --> B{Tem conta?}
   B -->|Não| C[📝 Cadastro]
   B -->|Sim| D[🔐 Login]
   C --> E[📊 Dashboard]
@@ -289,7 +289,7 @@ sequenceDiagram
 ### Estrutura de pastas (mapa mental)
 
 ```text
-TwinJobs/
+CareerTwin/
 ├── README.md                 ← você está aqui
 ├── .env.example              ← modelo de variáveis (sem segredos)
 ├── package.json
@@ -342,6 +342,7 @@ Não precisa de Docker.
 ```bash
 git clone https://github.com/akamitatrush/TwinJobs.git
 cd TwinJobs
+# pasta local pode se chamar TwinJobs no GitHub; o produto é CareerTwin
 npm install
 ```
 
@@ -534,13 +535,13 @@ AI_PROVIDER=openai   →  OpenAI; se quebrar → mock
 
 ## ☁️ Deploy na Vercel (visão rápida)
 
-1. Importe o repo `akamitatrush/TwinJobs` na Vercel  
+1. Importe o repo `akamitatrush/TwinJobs` (código do **CareerTwin**) na Vercel  
 2. Configure as **mesmas env vars** do `.env.local` (Production)  
-3. `NEXT_PUBLIC_APP_URL` = URL do deploy (ex. `https://twinjobs.vercel.app`)  
+3. `NEXT_PUBLIC_APP_URL` = URL do deploy (ex. `https://careertwin.vercel.app`)  
 4. No Supabase, adicione Site URL + Redirect da Vercel  
 5. Deploy  
 
-Detalhes de domínio custom (`jobstwin.com` etc.) ficam para depois.
+Detalhes de domínio custom (`careertwin.com` etc.) ficam para depois.
 
 ---
 
@@ -600,8 +601,8 @@ Sinta-se livre para fork, testes e PRs — mantenha as **regras de honestidade**
 ## 💚 Princípio final
 
 ```text
-TwinJobs não vende vaga.
-TwinJobs ajuda a comunicar a trajetória real
+CareerTwin não vende vaga.
+CareerTwin ajuda a comunicar a trajetória real
 e a decidir o próximo passo com mais clareza.
 ```
 

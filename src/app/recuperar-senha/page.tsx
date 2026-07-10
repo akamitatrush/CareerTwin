@@ -63,7 +63,7 @@ export default function RecuperarSenhaPage() {
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white">
           <Compass className="h-5 w-5" />
         </span>
-        TwinJobs
+        CareerTwin
       </Link>
 
       <Card className="w-full max-w-md">

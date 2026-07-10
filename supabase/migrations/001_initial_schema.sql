@@ -1,4 +1,4 @@
--- TwinJobs — schema inicial com RLS
+-- CareerTwin — schema inicial com RLS
 -- Execute no SQL Editor do Supabase (ou via CLI)
 
 -- Extensões
