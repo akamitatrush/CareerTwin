@@ -106,22 +106,19 @@ export function AppHeader({ fullName }: { fullName?: string }) {
   );
 }
 
-/** Header marketing em fundo claro (logo um pouco maior no topo) */
+/** Header marketing: só ações (logo fica grande no hero) */
 export function MarketingHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-card-border/80 bg-white/95 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
-        <Logo href="/" size="md" priority />
-        <div className="flex items-center gap-2">
-          <Link href="/login">
-            <Button variant="ghost" size="sm" className="font-semibold">
-              Entrar
-            </Button>
-          </Link>
-          <Link href="/cadastro">
-            <Button size="sm">Começar grátis</Button>
-          </Link>
-        </div>
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-end gap-2 px-4 sm:h-16 sm:px-6 lg:px-8">
+        <Link href="/login">
+          <Button variant="ghost" size="sm" className="font-semibold">
+            Entrar
+          </Button>
+        </Link>
+        <Link href="/cadastro">
+          <Button size="sm">Começar grátis</Button>
+        </Link>
       </div>
     </header>
   );
