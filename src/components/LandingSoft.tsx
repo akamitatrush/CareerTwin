@@ -476,7 +476,7 @@ function ResultPanel({
         </div>
       </div>
 
-      <div className="relative p-4">
+      <div className="relative p-5 sm:p-6">
         <AnimatePresence>
           {simRunning && (
             <motion.div
@@ -732,21 +732,21 @@ export function LandingSoft() {
         className="sticky top-0 z-50 border-b border-card-border bg-[var(--header-bg)] backdrop-blur-xl"
         aria-label="Navegação principal"
       >
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <Logo href="/" size="sm" priority onDark={isDark} />
           <ul className="hidden items-center gap-1 lg:flex">
             {pageMap.slice(1).map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className="rounded-lg px-2.5 py-1.5 text-[13px] font-semibold text-muted transition-colors hover:bg-muted-bg hover:text-foreground"
+                  className="rounded-lg px-3 py-2 text-[13px] font-semibold text-muted transition-colors hover:bg-muted-bg hover:text-foreground"
                 >
                   {l.label}
                 </a>
               </li>
             ))}
           </ul>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <ThemeToggle variant="ghost" />
             <Link href="/login" className="hidden sm:inline-flex">
               <Button variant="ghost" size="sm">
@@ -761,24 +761,21 @@ export function LandingSoft() {
       </nav>
 
       <main className="relative z-[2] flex-1">
-        {/* ═══ HERO PREENCHIDO (2 colunas) ═══ */}
+        {/* ═══ HERO (2 colunas com respiro) ═══ */}
         <section className="border-b border-card-border">
-          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-10 lg:px-8 lg:py-14">
+          <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14 lg:px-8 lg:py-24">
             <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-primary-soft px-2.5 py-1 text-[11px] font-bold text-[color:var(--brand-hover)] dark:border-orange-500/30 dark:text-[#ffc4b0]">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-primary-soft px-3 py-1.5 text-xs font-bold text-[color:var(--brand-hover)] dark:border-orange-500/30 dark:text-[#ffc4b0]">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                   Mentor de carreira · Brasil
                 </span>
-                <span className="rounded-full border border-card-border bg-card px-2.5 py-1 text-[11px] font-semibold text-muted">
+                <span className="rounded-full border border-card-border bg-card px-3 py-1.5 text-xs font-semibold text-muted">
                   Sem promessa de emprego
-                </span>
-                <span className="rounded-full border border-card-border bg-card px-2.5 py-1 text-[11px] font-semibold text-muted">
-                  Sem inventar trajetória
                 </span>
               </div>
 
-              <h1 className="mt-4 font-display text-[clamp(1.85rem,4.2vw,2.85rem)] leading-[1.12] tracking-tight">
+              <h1 className="mt-7 font-display text-[clamp(2rem,4.5vw,3.1rem)] leading-[1.12] tracking-tight">
                 Você manda currículo e{" "}
                 <em className="not-italic text-primary sm:italic">
                   o silêncio responde
@@ -786,14 +783,14 @@ export function LandingSoft() {
                 . A gente devolve um plano.
               </h1>
 
-              <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted sm:text-base">
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
                 O CareerTwin analisa o que você{" "}
                 <strong className="font-semibold text-foreground">já viveu</strong>{" "}
                 e organiza em 5 abas: o que ajustar primeiro, se cola na vaga e
                 como executar — com regras anti-invenção.
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-2">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/cadastro">
                   <Button size="lg">
                     Quero meu diagnóstico
@@ -807,8 +804,7 @@ export function LandingSoft() {
                 </a>
               </div>
 
-              {/* faixa de fatos — preenche o vazio sob o CTA */}
-              <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
                   { k: "5", v: "abas no resultado" },
                   { k: "8", v: "etapas no wizard" },
@@ -817,12 +813,12 @@ export function LandingSoft() {
                 ].map((s) => (
                   <div
                     key={s.v}
-                    className="rounded-xl border border-card-border bg-card/90 px-3 py-2.5 shadow-sm"
+                    className="rounded-2xl border border-card-border bg-card/90 px-3.5 py-4 shadow-sm"
                   >
-                    <p className="font-display text-xl font-semibold text-primary">
+                    <p className="font-display text-2xl font-semibold text-primary">
                       {s.k}
                     </p>
-                    <p className="mt-0.5 text-[11px] font-medium leading-snug text-muted">
+                    <p className="mt-1 text-[11px] font-medium leading-snug text-muted sm:text-xs">
                       {s.v}
                     </p>
                   </div>
@@ -830,11 +826,10 @@ export function LandingSoft() {
               </div>
             </div>
 
-            {/* mini preview no hero — mata o “lado vazio” */}
             <div className="relative">
               <div
                 aria-hidden
-                className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-primary/10 via-transparent to-orange-200/20 blur-xl dark:from-primary/15"
+                className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-primary/10 via-transparent to-orange-200/20 blur-xl dark:from-primary/15"
               />
               <div className="relative">
                 <ResultPanel
@@ -855,14 +850,14 @@ export function LandingSoft() {
                   simRunning={simRunning}
                   simLabel={simLabel}
                 />
-                <div className="mt-2 flex flex-wrap gap-1.5">
+                <div className="mt-4 flex flex-wrap gap-2">
                   {personas.map((p) => (
                     <button
                       key={p.id}
                       type="button"
                       onClick={() => selectPersona(p.id)}
                       className={cn(
-                        "rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors",
+                        "rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors",
                         personaId === p.id
                           ? "bg-primary text-white"
                           : "bg-card text-muted ring-1 ring-card-border hover:text-foreground"
@@ -882,26 +877,28 @@ export function LandingSoft() {
           id="mapa"
           className="border-b border-card-border bg-card/70"
         >
-          <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted">
-                Mapa desta página · nada escondido
-              </p>
-              <p className="text-xs text-muted sm:text-right">
-                Role ou clique · cada bloco tem função
-              </p>
+          <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-muted">
+                  Mapa desta página
+                </p>
+                <p className="mt-1 text-sm text-muted">
+                  Nada escondido — role ou clique em cada bloco.
+                </p>
+              </div>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
               {pageMap.map((m) => (
                 <a
                   key={m.href}
                   href={m.href}
-                  className="group flex items-center gap-2 rounded-xl border border-card-border bg-background px-3 py-2.5 transition-colors hover:border-primary/40 hover:bg-primary-soft/40"
+                  className="group flex items-center gap-2.5 rounded-2xl border border-card-border bg-background px-3.5 py-3.5 transition-colors hover:border-primary/40 hover:bg-primary-soft/40"
                 >
-                  <span className="font-mono text-[10px] font-bold text-primary">
+                  <span className="font-mono text-[11px] font-bold text-primary">
                     {m.n}
                   </span>
-                  <span className="text-xs font-semibold text-foreground group-hover:text-primary">
+                  <span className="text-sm font-semibold text-foreground group-hover:text-primary">
                     {m.label}
                   </span>
                 </a>
@@ -912,12 +909,12 @@ export function LandingSoft() {
 
         {/* ═══ FLUXO CONTÍNUO ENTRADA → SAÍDA ═══ */}
         <section className="border-b border-card-border">
-          <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
             <SectionLabel n="00">Fluxo completo</SectionLabel>
-            <h2 className="mt-2 font-display text-2xl tracking-tight sm:text-[1.75rem]">
+            <h2 className="mt-3 max-w-xl font-display text-2xl tracking-tight sm:text-3xl">
               Do material colado ao plano — sem buraco no meio
             </h2>
-            <div className="mt-5 grid gap-0 overflow-hidden rounded-2xl border border-card-border sm:grid-cols-5">
+            <div className="mt-8 grid gap-3 sm:grid-cols-5">
               {[
                 { t: "Cole CV + LinkedIn", d: "Texto real" },
                 { t: "Cargo e vaga", d: "Alvo claro" },
@@ -927,24 +924,15 @@ export function LandingSoft() {
               ].map((step, i) => (
                 <div
                   key={step.t}
-                  className={cn(
-                    "relative bg-card px-4 py-4",
-                    i > 0 && "border-t border-card-border sm:border-t-0 sm:border-l"
-                  )}
+                  className="relative rounded-2xl border border-card-border bg-card px-4 py-5 shadow-sm"
                 >
-                  <p className="font-mono text-[10px] font-bold text-primary">
+                  <p className="font-mono text-[11px] font-bold text-primary">
                     {String(i + 1).padStart(2, "0")}
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-foreground">
+                  <p className="mt-2 text-sm font-semibold text-foreground">
                     {step.t}
                   </p>
-                  <p className="mt-0.5 text-xs text-muted">{step.d}</p>
-                  {i < 4 && (
-                    <ArrowRight
-                      className="absolute right-2 top-1/2 hidden h-3.5 w-3.5 -translate-y-1/2 text-primary/40 sm:block"
-                      aria-hidden
-                    />
-                  )}
+                  <p className="mt-1 text-xs text-muted">{step.d}</p>
                 </div>
               ))}
             </div>
@@ -953,26 +941,26 @@ export function LandingSoft() {
 
         {/* ═══ PRODUTO: story + sticky ═══ */}
         <section id="produto" className="border-b border-card-border bg-muted-bg/30">
-          <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-            <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.05fr] lg:gap-10">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+            <div className="grid items-start gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
               {/* STORY com spine */}
               <div className="relative space-y-0">
                 {/* linha vertical contínua */}
                 <div
                   aria-hidden
-                  className="absolute bottom-4 left-[13px] top-4 hidden w-px bg-gradient-to-b from-primary via-card-border to-primary/40 sm:block"
+                  className="absolute bottom-8 left-[13px] top-4 hidden w-px bg-gradient-to-b from-primary via-card-border to-primary/40 sm:block"
                 />
 
                 {/* 01 personas */}
-                <div className="relative pb-8 sm:pl-10">
+                <div className="relative pb-14 sm:pl-12">
                   <span className="absolute left-0 top-0 hidden h-7 w-7 items-center justify-center rounded-full border-2 border-primary bg-card text-[10px] font-bold text-primary sm:flex">
                     01
                   </span>
                   <SectionLabel n="01">Para quem · escolha e o painel reage</SectionLabel>
-                  <h2 className="mt-2 font-display text-xl tracking-tight sm:text-2xl">
+                  <h2 className="mt-3 font-display text-xl tracking-tight sm:text-2xl">
                     Três cenários reais, um diagnóstico diferente
                   </h2>
-                  <div className="mt-4 space-y-2">
+                  <div className="mt-6 space-y-3">
                     {personas.map((p) => {
                       const active = personaId === p.id;
                       return (
@@ -981,7 +969,7 @@ export function LandingSoft() {
                           type="button"
                           onClick={() => selectPersona(p.id)}
                           className={cn(
-                            "flex w-full gap-3 rounded-xl border px-3.5 py-3 text-left transition-all",
+                            "flex w-full gap-3 rounded-2xl border px-4 py-4 text-left transition-all",
                             active
                               ? "border-primary/45 bg-primary-soft/70 ring-1 ring-primary/25"
                               : "border-card-border bg-card hover:border-orange-200"
@@ -1020,22 +1008,22 @@ export function LandingSoft() {
                 </div>
 
                 {/* 02 entrada */}
-                <div id="entrada" className="relative pb-8 sm:pl-10">
+                <div id="entrada" className="relative pb-14 sm:pl-12">
                   <span className="absolute left-0 top-0 hidden h-7 w-7 items-center justify-center rounded-full border-2 border-primary bg-card text-[10px] font-bold text-primary sm:flex">
                     02
                   </span>
                   <SectionLabel n="02">O que entra · só o que você cola</SectionLabel>
-                  <h2 className="mt-2 font-display text-xl tracking-tight sm:text-2xl">
+                  <h2 className="mt-3 font-display text-xl tracking-tight sm:text-2xl">
                     Quatro peças do wizard, sem scraping
                   </h2>
-                  <div className="mt-3 grid grid-cols-2 gap-2">
+                  <div className="mt-6 grid grid-cols-2 gap-3">
                     {inputSteps.map((s, i) => (
                       <button
                         key={s.id}
                         type="button"
                         onClick={() => setInputId(s.id)}
                         className={cn(
-                          "rounded-xl border px-3 py-2.5 text-left transition-all",
+                          "rounded-2xl border px-4 py-3.5 text-left transition-all",
                           inputId === s.id
                             ? "border-primary/50 bg-primary text-white"
                             : "border-card-border bg-card text-foreground hover:border-orange-200"
@@ -1049,13 +1037,13 @@ export function LandingSoft() {
                         >
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <span className="mt-0.5 block text-sm font-semibold">
+                        <span className="mt-1 block text-sm font-semibold">
                           {s.label}
                         </span>
                       </button>
                     ))}
                   </div>
-                  <div className="mt-2 rounded-xl border border-card-border bg-card p-3.5">
+                  <div className="mt-4 rounded-2xl border border-card-border bg-card p-5">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={activeInput.id}
@@ -1081,18 +1069,18 @@ export function LandingSoft() {
                 </div>
 
                 {/* 03 simulação */}
-                <div className="relative pb-8 sm:pl-10">
+                <div className="relative pb-14 sm:pl-12">
                   <span className="absolute left-0 top-0 hidden h-7 w-7 items-center justify-center rounded-full border-2 border-primary bg-card text-[10px] font-bold text-primary sm:flex">
                     03
                   </span>
                   <SectionLabel n="03">Simulação · ritmo sem mentira</SectionLabel>
-                  <h2 className="mt-2 font-display text-xl tracking-tight sm:text-2xl">
+                  <h2 className="mt-3 font-display text-xl tracking-tight sm:text-2xl">
                     Veja o que acontece em ~30 segundos
                   </h2>
-                  <p className="mt-1.5 text-sm text-muted">
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
                     Dados de exemplo. Não fingimos que já lemos o seu CV.
                   </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-5 flex flex-wrap gap-3">
                     {!simRunning ? (
                       <Button type="button" size="sm" onClick={runSimulation}>
                         <Play className="h-3.5 w-3.5" />
@@ -1126,18 +1114,18 @@ export function LandingSoft() {
                       {reanalysis ? "Score inicial" : `Reanálise ${persona.score}→${persona.scoreAfter}`}
                     </Button>
                   </div>
-                  <div className="mt-3 grid grid-cols-2 gap-2">
+                  <div className="mt-5 grid grid-cols-2 gap-3">
                     {simSteps.map((s, i) => (
                       <div
                         key={s.t}
-                        className="flex items-start gap-2 rounded-lg border border-card-border bg-card px-2.5 py-2"
+                        className="flex items-start gap-2.5 rounded-xl border border-card-border bg-card px-3.5 py-3"
                       >
-                        <CircleDot className="mt-0.5 h-3 w-3 shrink-0 text-primary" />
+                        <CircleDot className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                         <div>
                           <p className="font-mono text-[10px] text-primary">
                             {i + 1}/{simSteps.length}
                           </p>
-                          <p className="text-[11px] font-medium leading-snug text-muted">
+                          <p className="mt-0.5 text-xs font-medium leading-snug text-muted">
                             {s.t.replace("…", "")}
                           </p>
                         </div>
@@ -1147,48 +1135,48 @@ export function LandingSoft() {
                 </div>
 
                 {/* 04 mentor */}
-                <div className="relative sm:pl-10">
+                <div className="relative sm:pl-12">
                   <span className="absolute left-0 top-0 hidden h-7 w-7 items-center justify-center rounded-full border-2 border-primary bg-card text-[10px] font-bold text-primary sm:flex">
                     04
                   </span>
                   <SectionLabel n="04">Mentor, não oráculo</SectionLabel>
-                  <h2 className="mt-2 font-display text-xl tracking-tight sm:text-2xl">
+                  <h2 className="mt-3 font-display text-xl tracking-tight sm:text-2xl">
                     Quem faz o quê — sem ambiguidade
                   </h2>
-                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                    <div className="rounded-xl border border-card-border bg-card p-3.5">
+                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-card-border bg-card p-5">
                       <div className="flex items-center gap-2">
                         <Bot className="h-4 w-4 text-primary" />
                         <p className="text-sm font-bold">A IA</p>
                       </div>
-                      <ul className="mt-2 space-y-1.5 text-xs text-muted">
+                      <ul className="mt-3 space-y-2 text-xs text-muted sm:text-[13px]">
                         {[
                           "Lê o texto colado",
                           "Prioriza recomendações",
                           "Estima aderência",
                           "Sugere reescritas + alerta",
                         ].map((t) => (
-                          <li key={t} className="flex gap-1.5">
-                            <CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0 text-primary" />
+                          <li key={t} className="flex gap-2">
+                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                             {t}
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-xl border border-card-border bg-card p-3.5">
+                    <div className="rounded-2xl border border-card-border bg-card p-5">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-primary" />
                         <p className="text-sm font-bold">Você</p>
                       </div>
-                      <ul className="mt-2 space-y-1.5 text-xs text-muted">
+                      <ul className="mt-3 space-y-2 text-xs text-muted sm:text-[13px]">
                         {[
                           "Decide o que é verdade",
                           "Aceita ou descarta sugestões",
                           "Aplica no CV/LinkedIn",
                           "Escolhe quando reanalisar",
                         ].map((t) => (
-                          <li key={t} className="flex gap-1.5">
-                            <CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0 text-primary" />
+                          <li key={t} className="flex gap-2">
+                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                             {t}
                           </li>
                         ))}
@@ -1199,9 +1187,9 @@ export function LandingSoft() {
               </div>
 
               {/* STICKY PANEL */}
-              <div id="prova" className="lg:sticky lg:top-20 lg:self-start">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted">
+              <div id="prova" className="lg:sticky lg:top-24 lg:self-start">
+                <div className="mb-4 flex items-center justify-between">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted">
                     Painel ao vivo · prova
                   </p>
                   <Badge tone="primary">Interativo</Badge>
@@ -1231,44 +1219,42 @@ export function LandingSoft() {
 
         {/* ═══ ENTREGA — bento denso ═══ */}
         <section id="entrega" className="border-b border-card-border">
-          <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <SectionLabel n="03">O que você leva</SectionLabel>
-                <h2 className="mt-2 font-display text-2xl tracking-tight sm:text-[1.75rem]">
+                <h2 className="mt-3 font-display text-2xl tracking-tight sm:text-3xl">
                   Cinco abas. Sem monólogo solto.
                 </h2>
               </div>
-              <p className="max-w-xs text-xs text-muted sm:text-right">
+              <p className="max-w-xs text-sm leading-relaxed text-muted sm:text-right">
                 Formato estável no app — a landing mostra o mesmo mapa.
               </p>
             </div>
 
-            {/* mapa das 5 abas — grade completa */}
-            <div className="mt-5 grid gap-2 sm:grid-cols-5">
+            <div className="mt-10 grid gap-3 sm:grid-cols-5">
               {outputTabs.map((t, i) => (
                 <button
                   key={t.id}
                   type="button"
                   onClick={() => setTab(t.id as DemoTab)}
                   className={cn(
-                    "rounded-xl border px-3 py-3 text-left transition-all",
+                    "rounded-2xl border px-4 py-4 text-left transition-all",
                     tab === t.id
                       ? "border-primary bg-primary-soft/80 ring-1 ring-primary/30"
                       : "border-card-border bg-card hover:border-orange-200"
                   )}
                 >
-                  <p className="font-mono text-[10px] font-bold text-primary">
+                  <p className="font-mono text-[11px] font-bold text-primary">
                     Aba {i + 1}
                   </p>
-                  <p className="mt-1 text-sm font-bold text-foreground">{t.name}</p>
-                  <p className="mt-0.5 text-[11px] text-muted">{t.desc}</p>
+                  <p className="mt-2 text-sm font-bold text-foreground">{t.name}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted">{t.desc}</p>
                 </button>
               ))}
             </div>
 
-            {/* bento 2x3 preenchido */}
-            <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
                   icon: Sparkles,
@@ -1303,14 +1289,14 @@ export function LandingSoft() {
               ].map((f) => (
                 <div
                   key={f.t}
-                  className="flex gap-3 rounded-xl border border-card-border bg-card p-3.5 shadow-sm"
+                  className="flex gap-4 rounded-2xl border border-card-border bg-card p-5 shadow-sm"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
-                    <f.icon className="h-4 w-4" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
+                    <f.icon className="h-4.5 w-4.5" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-foreground">{f.t}</h3>
-                    <p className="mt-0.5 text-xs leading-relaxed text-muted">
+                    <h3 className="text-[15px] font-bold text-foreground">{f.t}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">
                       {f.d}
                     </p>
                   </div>
@@ -1325,27 +1311,27 @@ export function LandingSoft() {
           id="confianca"
           className="border-b border-card-border bg-card/60"
         >
-          <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-14">
               <div>
                 <SectionLabel n="04">Arquitetura de confiança</SectionLabel>
-                <h2 className="mt-2 font-display text-2xl tracking-tight sm:text-[1.75rem]">
+                <h2 className="mt-3 font-display text-2xl tracking-tight sm:text-3xl">
                   Regras explícitas — o que faz e o que não faz
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Em vez de um parágrafo vazio no centro da tela: a tabela
-                  completa. Assim não fica a sensação de que “falta um bloco”.
+                <p className="mt-4 max-w-md text-sm leading-relaxed text-muted sm:text-base">
+                  Tabela completa, sem bloco órfão no centro. Assim fica claro o
+                  contrato do produto.
                 </p>
-                <div className="mt-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-soft text-primary">
+                <div className="mt-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-soft text-primary">
                   <ShieldCheck className="h-6 w-6" />
                 </div>
               </div>
-              <div className="grid gap-1.5 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {trustRules.map((r) => (
                   <div
                     key={r.t}
                     className={cn(
-                      "flex items-start gap-2 rounded-xl border px-3 py-2.5 text-sm",
+                      "flex items-start gap-3 rounded-2xl border px-4 py-3.5 text-sm",
                       r.ok
                         ? "border-emerald-200/80 bg-emerald-50/50 text-foreground dark:border-emerald-500/20 dark:bg-emerald-500/5"
                         : "border-card-border bg-background text-muted"
@@ -1356,7 +1342,7 @@ export function LandingSoft() {
                     ) : (
                       <X className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
                     )}
-                    <span className="text-xs font-medium leading-snug sm:text-[13px]">
+                    <span className="text-xs font-medium leading-relaxed sm:text-[13px]">
                       <span className="font-bold">
                         {r.ok ? "Fazemos: " : "Não fazemos: "}
                       </span>
@@ -1369,18 +1355,18 @@ export function LandingSoft() {
           </div>
         </section>
 
-        {/* ═══ FAQ + COMEÇAR lado a lado no desktop ═══ */}
+        {/* ═══ FAQ + COMEÇAR ═══ */}
         <section className="border-b border-card-border">
           <div className="mx-auto grid max-w-6xl gap-0 lg:grid-cols-2">
             <div
               id="faq"
-              className="border-b border-card-border px-4 py-10 sm:px-6 sm:py-12 lg:border-b-0 lg:border-r lg:px-8"
+              className="border-b border-card-border px-4 py-16 sm:px-6 sm:py-20 lg:border-b-0 lg:border-r lg:px-10"
             >
               <SectionLabel n="05">Perguntas frequentes</SectionLabel>
-              <h2 className="mt-2 font-display text-2xl tracking-tight">
+              <h2 className="mt-3 font-display text-2xl tracking-tight sm:text-3xl">
                 Dúvidas fechadas antes do cadastro
               </h2>
-              <div className="mt-4 rounded-2xl border border-card-border bg-card px-3 sm:px-4">
+              <div className="mt-8 rounded-2xl border border-card-border bg-card px-4 sm:px-5">
                 {faqs.map((f, i) => (
                   <FaqItem key={f.q} q={f.q} a={f.a} defaultOpen={i === 0} />
                 ))}
@@ -1389,13 +1375,13 @@ export function LandingSoft() {
 
             <div
               id="comecar"
-              className="bg-muted-bg/40 px-4 py-10 sm:px-6 sm:py-12 lg:px-8"
+              className="bg-muted-bg/40 px-4 py-16 sm:px-6 sm:py-20 lg:px-10"
             >
               <SectionLabel n="06">Começar · próximos 5 minutos</SectionLabel>
-              <h2 className="mt-2 font-display text-2xl tracking-tight">
+              <h2 className="mt-3 font-display text-2xl tracking-tight sm:text-3xl">
                 Do silêncio para um plano claro
               </h2>
-              <ol className="mt-5 space-y-2">
+              <ol className="mt-8 space-y-3">
                 {[
                   "Crie a conta com e-mail",
                   "Cole o texto do currículo e do LinkedIn",
@@ -1405,16 +1391,16 @@ export function LandingSoft() {
                 ].map((t, i) => (
                   <li
                     key={t}
-                    className="flex items-center gap-3 rounded-xl border border-card-border bg-card px-3.5 py-3"
+                    className="flex items-center gap-3.5 rounded-2xl border border-card-border bg-card px-4 py-3.5"
                   >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                       {i + 1}
                     </span>
                     <span className="text-sm font-medium text-foreground">{t}</span>
                   </li>
                 ))}
               </ol>
-              <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link href="/cadastro" className="flex-1">
                   <Button size="lg" className="w-full">
                     Criar conta e começar
@@ -1427,7 +1413,7 @@ export function LandingSoft() {
                   </Button>
                 </Link>
               </div>
-              <p className="mt-3 text-center text-[11px] text-muted sm:text-left">
+              <p className="mt-4 text-center text-xs text-muted sm:text-left">
                 Conta grátis · sem promessa de contratação · dados só seus
               </p>
             </div>
@@ -1437,7 +1423,7 @@ export function LandingSoft() {
 
       {/* FOOTER densificado — fecha a página */}
       <footer className="relative z-[2] border-t border-card-border bg-card">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:gap-12 lg:px-8">
           <div className="sm:col-span-2 lg:col-span-1">
             <Logo href="/" size="md" onDark={isDark} />
             <p className="mt-2 text-sm font-medium text-foreground">
