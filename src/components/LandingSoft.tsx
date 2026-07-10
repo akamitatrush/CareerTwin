@@ -12,76 +12,73 @@ import {
   ShieldCheck,
   Sparkles,
   Target,
+  UserRound,
 } from "lucide-react";
 
-/** O que o MVP entrega de verdade — copy alinhada ao produto */
+const personas = [
+  {
+    title: "Recolocação",
+    text: "Mandou dezenas de currículos e o silêncio pesa. Quer saber o que ajustar primeiro — sem culpa e sem milagre.",
+  },
+  {
+    title: "Transição de carreira",
+    text: "Tem experiência, mas o mercado parece pedir “outro perfil”. Precisa separar o que falta de verdade do que só está mal contado.",
+  },
+  {
+    title: "Sênior com LinkedIn fraco",
+    text: "Histórico forte, título genérico. Quer posicionamento à altura do que já entregou — sem inventar promoção.",
+  },
+];
+
 const features = [
   {
     icon: FileText,
-    title: "Análise a partir do que você envia",
-    text: "Você cola o texto do currículo e do LinkedIn (e pode guardar PDF). A análise usa esse conteúdo — não inventamos cargos, ferramentas nem resultados.",
-    foot: "PDF é armazenado; o texto colado alimenta o diagnóstico.",
+    title: "Parte do que você envia",
+    text: "Currículo e LinkedIn em texto (PDF pode ser guardado). A análise usa o conteúdo real — não inventa cargos nem resultados.",
   },
   {
     icon: Sparkles,
     title: "Recomendações priorizadas",
-    text: "Lista o que melhorar no currículo e no LinkedIn, com impacto, esforço, urgência e ação sugerida. Você marca o que já fez.",
-    foot: "Prioridade, não um texto genérico de chat.",
+    text: "O que mudar no currículo e no LinkedIn, com impacto, esforço e ação. Você marca o que já fez.",
   },
   {
     icon: Target,
     title: "Aderência a cargo e vaga",
-    text: "Score de 0 a 100 para o cargo-alvo e, se você colar uma vaga, um diagnóstico extra com recomendação de candidatura.",
-    foot: "Não é promessa de vaga — é leitura de alinhamento.",
+    text: "Score de 0 a 100 para o cargo-alvo e, se colar uma vaga, leitura extra de alinhamento — sem prometer entrevista.",
   },
   {
     icon: MessageSquareQuote,
     title: "Tradução da experiência",
-    text: "Sugestões de como reescrever trechos reais em linguagem de mercado, sempre com alerta de autenticidade.",
-    foot: "Só use se aquilo realmente fez parte da sua trajetória.",
+    text: "Sugestões de reescrita em linguagem de mercado, sempre com alerta de autenticidade.",
   },
   {
     icon: GitCompare,
     title: "Plano e reanálise",
-    text: "Plano de ações com status. Depois de ajustar materiais, você pode gerar outra análise e ver o comparativo de score.",
-    foot: "Histórico no dashboard, progresso visível.",
+    text: "Checklist com status. Atualizou o material? Gere outra análise e compare a evolução.",
   },
   {
     icon: Lock,
     title: "Conta e privacidade",
-    text: "Login com e-mail. Cada usuário só acessa as próprias análises e arquivos (RLS no banco e pasta privada no storage).",
-    foot: "Seus dados não aparecem para outros usuários.",
+    text: "Só você vê suas análises e arquivos. Login com e-mail, dados isolados por usuário.",
   },
 ];
 
 const steps = [
   {
     n: "01",
-    time: "cadastro + wizard",
-    title: "Crie a conta e envie o que você tem",
-    text: "Informe currículo (texto), LinkedIn (link e/ou texto), cargo-alvo e, se quiser, uma vaga. Arquivos complementares são opcionais.",
+    title: "Crie a conta e envie o que tem",
+    text: "Cole o texto do currículo e do LinkedIn, informe o cargo-alvo e, se quiser, uma vaga. Sem formulário infinito.",
   },
   {
     n: "02",
-    time: "geração da análise",
-    title: "Receba um resultado em cinco abas",
-    text: "Visão geral, recomendações, aderência, tradução da experiência e plano de evolução — sempre no mesmo formato estruturado.",
+    title: "Receba o diagnóstico em 5 abas",
+    text: "Visão geral, recomendações, aderência, tradução e plano — formato estável, conteúdo da sua trajetória.",
   },
   {
     n: "03",
-    time: "no seu ritmo",
-    title: "Execute, marque e volte se quiser",
-    text: "Marque recomendações e ações como feitas. Quando atualizar o material, faça uma reanálise e compare a evolução.",
+    title: "Execute e volte se quiser",
+    text: "Marque o que concluiu. Quando atualizar os materiais, faça reanálise e veja o comparativo de score.",
   },
-];
-
-const trust = [
-  "Sem promessa de emprego",
-  "Sem inventar experiência",
-  "Texto do CV / LinkedIn",
-  "Vaga opcional",
-  "5 abas de resultado",
-  "Dados só seus",
 ];
 
 export function LandingSoft() {
@@ -92,7 +89,7 @@ export function LandingSoft() {
 
       {/* NAV */}
       <nav
-        className="fixed inset-x-0 top-0 z-[100] border-b border-[var(--site-border)]/80 bg-[var(--site-bg)]/80 backdrop-blur-xl"
+        className="fixed inset-x-0 top-0 z-[100] border-b border-[var(--site-border)]/80 bg-[var(--site-bg)]/85 backdrop-blur-xl"
         aria-label="Navegação principal"
       >
         <div className="mx-auto flex max-w-[1280px] items-center justify-between px-6 py-3.5">
@@ -100,9 +97,10 @@ export function LandingSoft() {
 
           <ul className="hidden items-center gap-8 md:flex">
             {[
+              { href: "#para-quem", label: "Para quem" },
               { href: "#como-funciona", label: "Como funciona" },
-              { href: "#o-que-voce-recebe", label: "O que entregamos" },
-              { href: "#limites", label: "Limites honestos" },
+              { href: "#resultado", label: "Resultado" },
+              { href: "#limites", label: "Limites" },
             ].map((l) => (
               <li key={l.href}>
                 <a
@@ -123,15 +121,15 @@ export function LandingSoft() {
               Entrar
             </Link>
             <Link href="/cadastro" className="site-btn-primary !px-[18px] !py-2.5 !text-sm">
-              Criar conta
+              Começar grátis
             </Link>
           </div>
         </div>
       </nav>
 
       <main className="relative z-[2]">
-        {/* HERO */}
-        <section className="relative flex min-h-[min(100vh,900px)] flex-col items-center justify-center overflow-hidden px-6 pb-16 pt-32 text-center sm:pt-36">
+        {/* ═══ HERO — dor + promessa honesta ═══ */}
+        <section className="relative flex min-h-[min(100vh,880px)] flex-col items-center justify-center overflow-hidden px-6 pb-16 pt-32 text-center sm:pt-36">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 z-0"
@@ -141,108 +139,275 @@ export function LandingSoft() {
             }}
           />
 
-          <div className="relative z-[2] w-full max-w-[720px]">
-            <p className="site-eyebrow site-fade-up mb-5 flex items-center justify-center gap-2">
+          <div className="relative z-[2] w-full max-w-[760px]">
+            <p className="site-eyebrow site-fade-up mb-6 flex items-center justify-center gap-2">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--site-accent)]" />
-              MVP · recolocação e transição de carreira
+              Mentor de carreira · Brasil · sem promessa de emprego
             </p>
 
             <h1
-              className="site-h-display site-fade-up mx-auto text-[clamp(2rem,5vw,3.25rem)]"
-              style={{ animationDelay: "0.05s" }}
+              className="site-h-display site-fade-up mx-auto text-[clamp(2.1rem,5.2vw,3.4rem)]"
+              style={{ animationDelay: "0.04s" }}
             >
-              Um mentor de carreira para{" "}
+              Você manda currículo e{" "}
               <em className="not-italic text-[var(--site-accent)] sm:italic">
-                comunicar melhor
-              </em>{" "}
-              o que você já fez.
+                não sabe o que está errado
+              </em>
+              .
             </h1>
 
             <p
-              className="site-fade-up mx-auto mt-5 max-w-[36rem] text-[16px] leading-relaxed text-[var(--site-fg-muted)] sm:text-[17px]"
-              style={{ animationDelay: "0.1s" }}
+              className="site-fade-up mx-auto mt-5 max-w-[36rem] text-[17px] leading-relaxed text-[var(--site-fg-muted)] sm:text-lg"
+              style={{ animationDelay: "0.08s" }}
             >
-              O CareerTwin analisa o material que <strong className="font-medium text-[var(--site-fg)]">você envia</strong> —
-              currículo, LinkedIn, cargo-alvo e vaga opcional — e devolve recomendações,
-              aderência, tradução da experiência e um plano de ações.{" "}
-              <strong className="font-medium text-[var(--site-fg)]">
-                Não promete emprego. Não inventa trajetória.
+              O CareerTwin analisa o que você{" "}
+              <strong className="font-semibold text-[var(--site-fg)]">já viveu</strong> — currículo,
+              LinkedIn, cargo-alvo e vaga opcional — e devolve clareza: o que ajustar primeiro,
+              se o perfil cola na vaga e um plano que dá para executar.{" "}
+              <strong className="font-semibold text-[var(--site-fg)]">
+                Sem inventar trajetória. Sem vender contratação.
               </strong>
             </p>
 
             <div
-              className="site-fade-up mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
-              style={{ animationDelay: "0.15s" }}
+              className="site-fade-up mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+              style={{ animationDelay: "0.12s" }}
             >
               <Link href="/cadastro" className="site-btn-primary w-full sm:w-auto">
-                Criar conta e analisar
+                Quero meu diagnóstico
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href="#como-funciona" className="site-btn-secondary w-full sm:w-auto">
-                Ver o fluxo real
+              <a href="#resultado" className="site-btn-secondary w-full sm:w-auto">
+                Ver como fica o resultado
               </a>
             </div>
 
             <p
               className="site-fade-up mt-5 text-sm text-[var(--site-fg-dim)]"
-              style={{ animationDelay: "0.18s" }}
+              style={{ animationDelay: "0.15s" }}
             >
-              Grátis no MVP · conta com e-mail · resultado salvo no seu dashboard
+              Conta gratuita no MVP · você cola o texto dos materiais · histórico no dashboard
+            </p>
+          </div>
+        </section>
+
+        {/* ═══ PARA QUEM ═══ */}
+        <section
+          id="para-quem"
+          className="border-t border-[var(--site-border)] px-6 py-16 sm:py-20"
+        >
+          <div className="mx-auto max-w-[1100px]">
+            <p className="site-eyebrow mb-4">Para quem é</p>
+            <h2 className="site-h-display max-w-[16ch] text-[clamp(1.75rem,3.5vw,2.4rem)]">
+              Feito para quem está no meio da névoa da recolocação
+            </h2>
+            <p className="mt-4 max-w-xl text-[var(--site-fg-muted)] leading-relaxed">
+              Não é job board. Não é gerador de CV milagroso. É um espaço para entender o
+              posicionamento e decidir o próximo passo com mais calma.
             </p>
 
-            {/* Preview honesto do que o app mostra */}
-            <div
-              className="site-fade-up site-card-glass mx-auto mt-14 max-w-lg p-6 text-left sm:p-7"
-              style={{ animationDelay: "0.22s" }}
-            >
-              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--site-fg-dim)]">
-                O que você vê depois da análise
-              </p>
-              <ul className="mt-4 space-y-3">
-                {[
-                  "Visão geral com score e confiança da análise",
-                  "Recomendações para currículo e LinkedIn",
-                  "Aderência ao cargo (e à vaga, se enviou)",
-                  "Tradução de trechos + alerta de autenticidade",
-                  "Plano de evolução com itens para marcar",
-                ].map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-2.5 text-sm text-[var(--site-fg-muted)]"
-                  >
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--site-accent)]" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              {personas.map((p) => (
+                <article key={p.title} className="site-card-glass p-6">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--site-accent)]/12 text-[var(--site-accent)]">
+                    <UserRound className="h-5 w-5" />
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold text-[var(--site-fg)]">{p.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--site-fg-muted)]">
+                    {p.text}
+                  </p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* TRUST */}
-        <section className="border-y border-[var(--site-border)] py-7">
-          <div className="mx-auto flex max-w-[1100px] flex-wrap items-center justify-center gap-2 px-6 sm:gap-3">
-            {trust.map((t) => (
-              <span
-                key={t}
-                className="rounded-full border border-[var(--site-border)] bg-[var(--site-card-bg)] px-3.5 py-1.5 text-xs font-medium text-[var(--site-fg-muted)] sm:text-sm"
-              >
-                {t}
-              </span>
-            ))}
+        {/* ═══ PROVA VISUAL — exemplo de resultado ═══ */}
+        <section
+          id="resultado"
+          className="border-t border-[var(--site-border)] px-6 py-16 sm:py-20"
+        >
+          <div className="mx-auto max-w-[1100px]">
+            <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
+              <div>
+                <p className="site-eyebrow mb-4">Por dentro do produto</p>
+                <h2 className="site-h-display text-[clamp(1.75rem,3.5vw,2.4rem)]">
+                  Assim fica o resultado — de verdade
+                </h2>
+                <p className="mt-4 text-[var(--site-fg-muted)] leading-relaxed">
+                  Depois do wizard, você abre uma análise com score, confiança e cinco abas.
+                  Abaixo é um{" "}
+                  <strong className="font-medium text-[var(--site-fg)]">exemplo ilustrativo</strong>{" "}
+                  (números fictícios), no mesmo formato que o app usa.
+                </p>
+                <ul className="mt-6 space-y-2.5">
+                  {[
+                    "Visão geral com o que priorizar",
+                    "Recomendações que você marca como feitas",
+                    "Aderência ao cargo e à vaga (se enviou)",
+                    "Tradução com alerta de autenticidade",
+                    "Plano de evolução no seu ritmo",
+                  ].map((t) => (
+                    <li
+                      key={t}
+                      className="flex items-start gap-2 text-sm text-[var(--site-fg-muted)]"
+                    >
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--site-accent)]" />
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Mock visual honesto */}
+              <div className="site-card-glass overflow-hidden p-0">
+                <div className="flex items-center justify-between border-b border-[var(--site-border)] px-5 py-3">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--site-fg-dim)]">
+                    Exemplo · não é o seu resultado
+                  </span>
+                  <span className="rounded-full bg-[var(--site-accent)]/15 px-2.5 py-0.5 text-[11px] font-semibold text-[var(--site-accent)]">
+                    Concluída
+                  </span>
+                </div>
+
+                <div className="p-5 sm:p-6">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-[var(--site-fg-dim)]">Score de aderência</p>
+                      <p className="mt-1 font-display text-5xl font-semibold text-[var(--site-fg)]">
+                        68
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-[var(--site-accent)]">
+                        Boa aderência · confiança média
+                      </p>
+                    </div>
+                    <div className="h-[72px] w-[72px] rounded-full border-[5px] border-white/10 border-t-[var(--site-accent)] border-r-[var(--site-accent)]/35" />
+                  </div>
+
+                  <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full w-[68%] rounded-full bg-[var(--site-accent)]" />
+                  </div>
+
+                  <div className="mt-6 rounded-[12px] border border-[var(--site-border)] bg-white/[0.03] p-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-[var(--site-accent)]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[var(--site-accent)]">
+                        Comunicação
+                      </span>
+                      <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--site-fg-dim)]">
+                        Impacto alto
+                      </span>
+                      <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--site-fg-dim)]">
+                        Esforço médio
+                      </span>
+                    </div>
+                    <p className="mt-3 text-sm font-semibold text-[var(--site-fg)]">
+                      Reescrever a experiência genérica do último emprego
+                    </p>
+                    <p className="mt-2 text-xs leading-relaxed text-[var(--site-fg-dim)]">
+                      <span className="text-[var(--site-fg-muted)]">Problema:</span> “Ajudava a
+                      equipe no dia a dia” não mostra demanda, ferramenta nem impacto.
+                    </p>
+                    <p className="mt-2 text-xs leading-relaxed text-[var(--site-fg-muted)]">
+                      <span className="font-medium text-[var(--site-fg)]">Ação:</span> detalhar 2–3
+                      rotinas reais — sem inventar números.
+                    </p>
+                    <p className="mt-3 rounded-lg border border-[var(--site-accent)]/25 bg-[var(--site-accent)]/10 px-3 py-2 text-[11px] leading-relaxed text-[#ffc4b0]">
+                      Alerta de autenticidade: use a sugestão só se essas atividades realmente
+                      fizeram parte da sua experiência.
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {["Visão geral", "Recomendações", "Aderência", "Tradução", "Plano"].map(
+                      (tab, i) => (
+                        <span
+                          key={tab}
+                          className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold ${
+                            i === 1
+                              ? "bg-[var(--site-accent)] text-white"
+                              : "bg-white/5 text-[var(--site-fg-dim)]"
+                          }`}
+                        >
+                          {tab}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* O QUE ENTREGAMOS */}
-        <section id="o-que-voce-recebe" className="px-6 py-20 sm:py-24">
+        {/* CTA MEIO */}
+        <section className="px-6 pb-4">
           <div className="mx-auto max-w-[1100px]">
-            <p className="site-eyebrow mb-4">O que entregamos de verdade</p>
-            <h2 className="site-h-display max-w-[18ch] text-[clamp(1.75rem,3.5vw,2.5rem)]">
-              Só o que o produto faz hoje
+            <div className="flex flex-col items-start justify-between gap-6 rounded-[20px] border border-[var(--site-accent)]/30 bg-gradient-to-br from-[var(--site-accent)]/15 to-transparent px-6 py-8 sm:flex-row sm:items-center sm:px-10">
+              <div>
+                <p className="text-sm font-semibold text-[var(--site-accent)]">
+                  Pronto para sair da névoa?
+                </p>
+                <p className="mt-1 max-w-lg text-[var(--site-fg-muted)]">
+                  Crie a conta, cole o texto do seu material e gere a primeira análise. Leva
+                  poucos minutos.
+                </p>
+              </div>
+              <Link href="/cadastro" className="site-btn-primary shrink-0 whitespace-nowrap">
+                Criar conta grátis
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ COMO FUNCIONA ═══ */}
+        <section
+          id="como-funciona"
+          className="border-t border-[var(--site-border)] px-6 py-16 sm:py-20"
+        >
+          <div className="mx-auto max-w-[1100px]">
+            <p className="site-eyebrow mb-4">Como funciona</p>
+            <h2 className="site-h-display max-w-[16ch] text-[clamp(1.75rem,3.5vw,2.4rem)]">
+              Três passos. Sem atalho mágico.
+            </h2>
+            <p className="mt-4 max-w-xl text-[var(--site-fg-muted)] leading-relaxed">
+              O mesmo fluxo que você percorre depois do login — simples e guiado.
+            </p>
+
+            <div className="mt-12 space-y-8">
+              {steps.map((s) => (
+                <div
+                  key={s.n}
+                  className="grid items-start gap-5 border-b border-[var(--site-border)] pb-8 last:border-0 md:grid-cols-[auto_1fr] md:gap-10"
+                >
+                  <span className="site-step-number">{s.n}</span>
+                  <div>
+                    <h3 className="text-xl font-semibold tracking-[-0.01em] text-[var(--site-fg)] sm:text-2xl">
+                      {s.title}
+                    </h3>
+                    <p className="mt-2 max-w-xl text-[var(--site-fg-muted)] leading-relaxed">
+                      {s.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ O QUE ENTREGA ═══ */}
+        <section
+          id="o-que-voce-recebe"
+          className="border-t border-[var(--site-border)] px-6 py-16 sm:py-20"
+        >
+          <div className="mx-auto max-w-[1100px]">
+            <p className="site-eyebrow mb-4">O que você leva</p>
+            <h2 className="site-h-display max-w-[18ch] text-[clamp(1.75rem,3.5vw,2.4rem)]">
+              Clareza prática — não um monólogo de IA
             </h2>
             <p className="mt-4 max-w-2xl text-[var(--site-fg-muted)] leading-relaxed">
-              Sem vitrine de features futuras. Abaixo está o que você consegue usar assim que
-              criar a conta neste MVP.
+              Tudo baseado no material que você envia. Formato estável, prioridades e plano
+              para executar.
             </p>
 
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -257,135 +422,61 @@ export function LandingSoft() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--site-fg-muted)]">
                     {f.text}
                   </p>
-                  <p className="mt-4 text-xs font-medium text-[var(--site-fg-dim)]">{f.foot}</p>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        {/* COMO FUNCIONA */}
-        <section
-          id="como-funciona"
-          className="border-t border-[var(--site-border)] px-6 py-20 sm:py-24"
-        >
-          <div className="mx-auto max-w-[1100px]">
-            <p className="site-eyebrow mb-4">Como funciona</p>
-            <h2 className="site-h-display max-w-[16ch] text-[clamp(1.75rem,3.5vw,2.5rem)]">
-              Do cadastro ao plano, sem atalho mágico
+        {/* ═══ LIMITES — curtos e humanos ═══ */}
+        <section id="limites" className="border-t border-[var(--site-border)] px-6 py-16 sm:py-20">
+          <div className="mx-auto max-w-[800px] text-center">
+            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--site-accent)]/15 text-[var(--site-accent)]">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <p className="site-eyebrow mb-3">Limites honestos</p>
+            <h2 className="site-h-display text-[clamp(1.6rem,3vw,2.25rem)]">
+              Preferimos dizer o que{" "}
+              <em className="not-italic text-[var(--site-accent)] sm:italic">não</em> fazemos
             </h2>
-            <p className="mt-4 max-w-xl text-[var(--site-fg-muted)] leading-relaxed">
-              O fluxo real do app — o mesmo que você percorre depois do login.
+            <p className="mx-auto mt-4 max-w-lg text-[var(--site-fg-muted)] leading-relaxed">
+              Assim você usa a ferramenta pelo valor certo — posicionamento e plano — e não por
+              uma expectativa que o produto não cumpre.
             </p>
-
-            <div className="mt-14 space-y-10">
-              {steps.map((s) => (
-                <div
-                  key={s.n}
-                  className="grid items-start gap-6 border-b border-[var(--site-border)] pb-10 last:border-0 md:grid-cols-[auto_1fr] md:gap-12"
+            <ul className="mx-auto mt-8 max-w-md space-y-3 text-left">
+              {[
+                "Não prometemos contratação nem entrevista",
+                "Não inventamos experiências, métricas ou certificações",
+                "Não fazemos scraping do LinkedIn — você cola o texto",
+                "Não “lemos” PDF sozinhos no MVP — cole o conteúdo para a melhor análise",
+                "Não buscamos vagas na internet por você",
+              ].map((t) => (
+                <li
+                  key={t}
+                  className="flex gap-3 rounded-xl border border-[var(--site-border)] bg-[var(--site-card-bg)] px-4 py-3 text-sm text-[var(--site-fg-muted)]"
                 >
-                  <span className="site-step-number">{s.n}</span>
-                  <div>
-                    <p className="site-eyebrow !normal-case !tracking-wide text-[var(--site-accent)]">
-                      {s.time}
-                    </p>
-                    <h3 className="mt-2 text-xl font-semibold tracking-[-0.01em] text-[var(--site-fg)] sm:text-2xl">
-                      {s.title}
-                    </h3>
-                    <p className="mt-3 max-w-xl text-[var(--site-fg-muted)] leading-relaxed">
-                      {s.text}
-                    </p>
-                  </div>
-                </div>
+                  <span className="text-[var(--site-accent)]">—</span>
+                  {t}
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
-        {/* LIMITES HONESTOS */}
-        <section id="limites" className="border-t border-[var(--site-border)] px-6 py-20">
-          <div className="mx-auto max-w-[1100px]">
-            <div className="site-card-glass p-8 sm:p-12">
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[var(--site-accent)] text-white shadow-[0_8px_24px_var(--site-accent-glow)]">
-                  <ShieldCheck className="h-6 w-6" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="site-eyebrow mb-2 text-[var(--site-accent)]">Transparência</p>
-                  <h2 className="site-h-display text-[clamp(1.5rem,3vw,2.25rem)]">
-                    O que este MVP <em className="not-italic sm:italic">não</em> faz
-                  </h2>
-                  <p className="mt-4 max-w-2xl text-[var(--site-fg-muted)] leading-relaxed">
-                    Preferimos ser claros. Assim você usa a ferramenta pelo valor certo —
-                    posicionamento e plano — e não por uma expectativa que o produto não
-                    cumpre.
-                  </p>
-                  <div className="mt-8 grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <p className="text-sm font-semibold text-[var(--site-fg)]">Fazemos</p>
-                      <ul className="mt-3 space-y-2">
-                        {[
-                          "Analisar texto de currículo e LinkedIn",
-                          "Sugerir melhorias e reescritas com ressalvas",
-                          "Avaliar aderência a cargo e vaga colada",
-                          "Salvar histórico e permitir reanálise",
-                        ].map((t) => (
-                          <li
-                            key={t}
-                            className="flex gap-2 text-sm text-[var(--site-fg-muted)]"
-                          >
-                            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--site-accent)]" />
-                            {t}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-[var(--site-fg)]">Não fazemos</p>
-                      <ul className="mt-3 space-y-2">
-                        {[
-                          "Prometer contratação ou entrevista",
-                          "Inventar experiências ou métricas",
-                          "Scraping automático do LinkedIn",
-                          "Ler PDF magicamente (cole o texto)",
-                          "Buscar vagas na internet por você",
-                        ].map((t) => (
-                          <li
-                            key={t}
-                            className="flex gap-2 text-sm text-[var(--site-fg-muted)]"
-                          >
-                            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-[var(--site-fg-dim)]">
-                              —
-                            </span>
-                            {t}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
+        {/* ═══ CTA FINAL ═══ */}
         <section className="border-t border-[var(--site-border)] px-6 py-20 text-center">
           <div className="mx-auto max-w-2xl">
-            <div className="mb-6 flex justify-center">
-              <LogoWordmark href={null} size="md" />
-            </div>
-            <p className="site-eyebrow mb-4">Começar</p>
-            <h2 className="site-h-display text-[clamp(1.75rem,3.5vw,2.5rem)]">
-              Pronto para a primeira análise?
+            <p className="site-eyebrow mb-4">Vamos juntos</p>
+            <h2 className="site-h-display text-[clamp(1.85rem,3.5vw,2.75rem)]">
+              Do silêncio das candidaturas para um plano claro
             </h2>
             <p className="mx-auto mt-4 max-w-md text-[var(--site-fg-muted)] leading-relaxed">
-              Crie a conta, cole o texto do seu currículo e do LinkedIn, informe o cargo-alvo
-              e gere o diagnóstico. Você pode voltar depois e marcar o que já executou.
+              Crie a conta, cole o texto do seu currículo e do LinkedIn, diga o cargo que busca
+              e gere o diagnóstico. Você decide o ritmo.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/cadastro" className="site-btn-primary w-full sm:w-auto">
-                Criar conta
+                Criar conta e começar
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="/login" className="site-btn-secondary w-full sm:w-auto">
