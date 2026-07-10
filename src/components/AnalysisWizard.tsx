@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { extractDocumentText } from "@/lib/extractDocumentText";
 import { AREA_OPTIONS, SENIORITY_OPTIONS } from "@/lib/labels";
 import { Alert, Button, Card, Input, Label, ProgressBar, Textarea } from "@/components/ui";
 import {
@@ -49,11 +50,13 @@ export function AnalysisWizard() {
   // form state
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [resumeText, setResumeText] = useState("");
-  const [resumeFileOnly, setResumeFileOnly] = useState(false);
+  const [resumeExtractInfo, setResumeExtractInfo] = useState<string | null>(null);
+  const [extracting, setExtracting] = useState(false);
 
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [linkedinFile, setLinkedinFile] = useState<File | null>(null);
   const [linkedinText, setLinkedinText] = useState("");
+  const [linkedinExtractInfo, setLinkedinExtractInfo] = useState<string | null>(null);
 
   const [targetRole, setTargetRole] = useState("");
   const [targetArea, setTargetArea] = useState("administrativo");
@@ -106,11 +109,18 @@ export function AnalysisWizard() {
 
   const progress = useMemo(() => ((step + 1) / STEPS.length) * 100, [step]);
 
-  async function readTxtIfPossible(file: File): Promise<string> {
-    if (file.type === "text/plain" || file.name.toLowerCase().endsWith(".txt")) {
-      return file.text();
+  async function readTextFromFile(file: File): Promise<{ text: string; info?: string }> {
+    const result = await extractDocumentText(file);
+    const parts: string[] = [];
+    if (result.method === "pdf" && result.text.length >= 40) {
+      parts.push(`Texto extraído do PDF (${result.text.length} caracteres). Revise e complete se faltar algo.`);
+    } else if (result.method === "docx" && result.text.length >= 40) {
+      parts.push(`Texto extraído do DOCX (${result.text.length} caracteres). Revise se necessário.`);
+    } else if (result.method === "txt" && result.text.length >= 40) {
+      parts.push(`Texto lido do arquivo (${result.text.length} caracteres).`);
     }
-    return "";
+    if (result.warning) parts.push(result.warning);
+    return { text: result.text, info: parts.length ? parts.join(" ") : undefined };
   }
 
   async function uploadFile(
@@ -144,36 +154,45 @@ export function AnalysisWizard() {
         return;
       }
 
-      // texto do currículo: preferir colado; .txt do arquivo
+      // texto: preferir campo; se vazio, tenta extrair de novo do arquivo (PDF/DOCX/TXT)
       let finalResumeText = resumeText.trim();
-      if (!finalResumeText && resumeFile) {
-        const fromFile = await readTxtIfPossible(resumeFile);
-        finalResumeText = fromFile;
+      if (finalResumeText.length < 80 && resumeFile) {
+        const fromFile = await readTextFromFile(resumeFile);
+        if (fromFile.text.length > finalResumeText.length) finalResumeText = fromFile.text;
       }
 
       let finalLinkedinText = linkedinText.trim();
-      if (!finalLinkedinText && linkedinFile) {
-        finalLinkedinText = await readTxtIfPossible(linkedinFile);
+      if (finalLinkedinText.length < 80 && linkedinFile) {
+        const fromFile = await readTextFromFile(linkedinFile);
+        if (fromFile.text.length > finalLinkedinText.length) finalLinkedinText = fromFile.text;
       }
 
       let finalJobText = jobText.trim();
-      if (!finalJobText && jobFile) {
-        finalJobText = await readTxtIfPossible(jobFile);
+      if (finalJobText.length < 40 && jobFile) {
+        const fromFile = await readTextFromFile(jobFile);
+        if (fromFile.text.length > finalJobText.length) finalJobText = fromFile.text;
       }
 
-      const compText = compFiles
-        .map((f) => `[${f.name}]\n${f.text}`)
-        .filter((t) => t.length > 10)
+      const compText = (
+        await Promise.all(
+          compFiles.map(async (f) => {
+            let t = f.text;
+            // se o complemento foi só nome sem texto, já tentamos no upload
+            return t.length > 10 ? `[${f.name}]\n${t}` : "";
+          })
+        )
+      )
+        .filter(Boolean)
         .join("\n\n");
 
-      // URL sozinha NÃO basta (não fazemos scraping). Precisa de texto real.
+      // URL sozinha NÃO basta (não fazemos scraping). Precisa de texto real (colado ou extraído do PDF/DOCX).
       const MIN_TEXT = 80;
       const hasResume = finalResumeText.length >= MIN_TEXT;
       const hasLinkedinBody = finalLinkedinText.length >= MIN_TEXT;
       if (!hasResume && !hasLinkedinBody) {
         throw new Error(
-          "Para uma análise real, cole o texto do currículo e/ou do LinkedIn (mín. ~80 caracteres). " +
-            "Só o link do LinkedIn ou PDF sem texto colado não é suficiente — no MVP a IA não lê esses arquivos sozinha."
+          "Não há texto suficiente do currículo ou LinkedIn. Envie PDF/DOCX com texto selecionável " +
+            "(não escaneado) ou cole o conteúdo no campo. Só o link do LinkedIn não é lido."
         );
       }
 
@@ -386,27 +405,49 @@ export function AnalysisWizard() {
 
   async function onResumeFile(file: File | null) {
     setResumeFile(file);
-    if (!file) {
-      setResumeFileOnly(false);
-      return;
+    setResumeExtractInfo(null);
+    if (!file) return;
+    setExtracting(true);
+    try {
+      const { text, info } = await readTextFromFile(file);
+      if (text) {
+        setResumeText((prev) => (prev.trim().length >= text.length ? prev : text));
+      }
+      setResumeExtractInfo(info || null);
+    } finally {
+      setExtracting(false);
     }
-    const txt = await readTxtIfPossible(file);
-    if (txt) {
-      setResumeText((prev) => prev || txt);
-      setResumeFileOnly(false);
-    } else {
-      setResumeFileOnly(true);
+  }
+
+  async function onLinkedinFile(file: File | null) {
+    setLinkedinFile(file);
+    setLinkedinExtractInfo(null);
+    if (!file) return;
+    setExtracting(true);
+    try {
+      const { text, info } = await readTextFromFile(file);
+      if (text) {
+        setLinkedinText((prev) => (prev.trim().length >= text.length ? prev : text));
+      }
+      setLinkedinExtractInfo(info || null);
+    } finally {
+      setExtracting(false);
     }
   }
 
   async function onCompFiles(files: FileList | null) {
     if (!files?.length) return;
-    const next: CompFile[] = [];
-    for (const file of Array.from(files)) {
-      const text = await readTxtIfPossible(file);
-      next.push({ name: file.name, type: file.type, text });
+    setExtracting(true);
+    try {
+      const next: CompFile[] = [];
+      for (const file of Array.from(files)) {
+        const { text } = await readTextFromFile(file);
+        next.push({ name: file.name, type: file.type, text });
+      }
+      setCompFiles((prev) => [...prev, ...next]);
+    } finally {
+      setExtracting(false);
     }
-    setCompFiles((prev) => [...prev, ...next]);
   }
 
   function canNext(): boolean {
@@ -469,14 +510,20 @@ export function AnalysisWizard() {
         <Card className="animate-fade-up space-y-4">
           <h2 className="font-display text-2xl">Currículo</h2>
           <Alert tone="info" className="!mt-0">
-            <strong>Obrigatório colar o texto</strong> (ou TXT). PDF/DOC só são guardados — a IA
-            do MVP <em>não</em> extrai PDF sozinha. Sem texto de CV ou LinkedIn a análise fica
-            vazia.
+            <strong>PDF e DOCX com texto</strong> são lidos automaticamente e preenchem o campo
+            abaixo. PDF <em>escaneado</em> (só imagem) ainda precisa colar o texto — não fazemos
+            OCR. Link do LinkedIn sozinho continua sem leitura.
           </Alert>
           <p className="text-sm text-muted">
-            Formatos de upload: PDF, DOC, DOCX, TXT. O que entra na análise é o campo “Colar
-            texto”.
+            Formatos: PDF, DOCX, TXT (e .doc antigo: cole o texto). Você pode revisar o texto
+            extraído antes de continuar.
           </p>
+          {extracting && (
+            <p className="flex items-center gap-2 text-sm text-muted">
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              Extraindo texto do arquivo…
+            </p>
+          )}
           <div>
             <Label>Upload do currículo</Label>
             <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-card-border bg-muted-bg/50 px-4 py-8 hover:bg-muted-bg">
@@ -492,21 +539,21 @@ export function AnalysisWizard() {
               />
             </label>
           </div>
-          {resumeFileOnly && (
-            <Alert tone="warning">
-              Para a melhor análise, cole também o texto do seu currículo. Não extraímos texto
-              automaticamente de PDF/DOC neste MVP.
-            </Alert>
+          {resumeExtractInfo && (
+            <Alert tone={resumeText.length >= 80 ? "info" : "warning"}>{resumeExtractInfo}</Alert>
           )}
           <div>
-            <Label htmlFor="resumeText">Colar texto do currículo</Label>
+            <Label htmlFor="resumeText">Texto do currículo (extraído ou colado)</Label>
             <Textarea
               id="resumeText"
               value={resumeText}
               onChange={(e) => setResumeText(e.target.value)}
-              placeholder="Cole aqui o conteúdo do seu currículo…"
+              placeholder="Cole aqui o conteúdo do seu currículo ou envie um PDF/DOCX acima…"
               className="min-h-[180px]"
             />
+            {resumeText.trim().length > 0 && (
+              <p className="mt-1 text-xs text-muted">{resumeText.trim().length} caracteres</p>
+            )}
           </div>
         </Card>
       )}
@@ -515,12 +562,18 @@ export function AnalysisWizard() {
         <Card className="animate-fade-up space-y-4">
           <h2 className="font-display text-2xl">LinkedIn</h2>
           <Alert tone="warning" className="!mt-0">
-            <strong>Só o link não analisa o perfil.</strong> Cole Sobre + Experiências (ou o
-            texto exportado). Sem isso + sem texto do currículo, o mentor não tem o que avaliar.
+            <strong>Só o link não analisa o perfil.</strong> Envie PDF exportado do perfil (com
+            texto) ou cole Sobre + Experiências. Sem scraping automático da URL.
           </Alert>
           <p className="text-sm text-muted">
-            O link é só referência (sem scraping). O conteúdo da análise vem do texto colado.
+            O link fica só como referência. O conteúdo da análise vem do texto extraído/colado.
           </p>
+          {extracting && (
+            <p className="flex items-center gap-2 text-sm text-muted">
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              Extraindo texto do arquivo…
+            </p>
+          )}
           <div>
             <Label htmlFor="liUrl">Link público do LinkedIn</Label>
             <Input
@@ -532,29 +585,27 @@ export function AnalysisWizard() {
             />
           </div>
           <div>
-            <Label>Upload de PDF exportado</Label>
+            <Label>Upload de PDF/DOCX exportado</Label>
             <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-card-border bg-muted-bg/50 px-4 py-6 hover:bg-muted-bg">
               <FileUp className="h-5 w-5 text-primary" />
               <span className="text-sm text-muted">
-                {linkedinFile ? linkedinFile.name : "Selecionar PDF/DOC/TXT"}
+                {linkedinFile ? linkedinFile.name : "Selecionar PDF/DOCX/TXT"}
               </span>
               <input
                 type="file"
                 accept={ACCEPT}
                 className="hidden"
-                onChange={async (e) => {
-                  const f = e.target.files?.[0] || null;
-                  setLinkedinFile(f);
-                  if (f) {
-                    const t = await readTxtIfPossible(f);
-                    if (t) setLinkedinText((p) => p || t);
-                  }
-                }}
+                onChange={(e) => onLinkedinFile(e.target.files?.[0] || null)}
               />
             </label>
           </div>
+          {linkedinExtractInfo && (
+            <Alert tone={linkedinText.length >= 80 ? "info" : "warning"}>
+              {linkedinExtractInfo}
+            </Alert>
+          )}
           <div>
-            <Label htmlFor="liText">Texto colado do perfil</Label>
+            <Label htmlFor="liText">Texto do perfil (extraído ou colado)</Label>
             <Textarea
               id="liText"
               value={linkedinText}
@@ -562,10 +613,12 @@ export function AnalysisWizard() {
               placeholder="Cole headline, sobre, experiências…"
               className="min-h-[160px]"
             />
+            {linkedinText.trim().length > 0 && (
+              <p className="mt-1 text-xs text-muted">{linkedinText.trim().length} caracteres</p>
+            )}
           </div>
           <Alert tone="info">
-            Para a melhor análise, cole também o texto do seu perfil. PDF exportado fica
-            armazenado, mas não é lido automaticamente.
+            Se o PDF for só imagem (escaneado), a extração falha — aí cole o texto à mão.
           </Alert>
         </Card>
       )}
@@ -686,8 +739,13 @@ export function AnalysisWizard() {
                     const f = e.target.files?.[0] || null;
                     setJobFile(f);
                     if (f) {
-                      const t = await readTxtIfPossible(f);
-                      if (t) setJobText((p) => p || t);
+                      setExtracting(true);
+                      try {
+                        const { text } = await readTextFromFile(f);
+                        if (text) setJobText((p) => (p.trim().length >= text.length ? p : text));
+                      } finally {
+                        setExtracting(false);
+                      }
                     }
                   }}
                 />
