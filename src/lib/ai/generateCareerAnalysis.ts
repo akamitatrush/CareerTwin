@@ -1,5 +1,6 @@
 import type { AnalysisResultPayload, GenerateAnalysisInput } from "@/lib/types";
 import { buildMockAnalysis } from "./mockAnalysis";
+import { normalizeAnalysisResult } from "./normalizeAnalysisResult";
 import { analysisResultSchema } from "./schema";
 import { SYSTEM_PROMPT } from "./systemPrompt";
 import { buildUserPrompt } from "./userPrompt";
@@ -31,7 +32,20 @@ export async function generateCareerAnalysis(
   if (llm) {
     try {
       const raw = await callChatCompletions(llm, input);
-      const parsed = analysisResultSchema.safeParse(raw);
+      const normalized = normalizeAnalysisResult(raw);
+      let parsed = analysisResultSchema.safeParse(normalized);
+
+      // 1 retry: pede ao modelo para reformatar se ainda falhar
+      if (!parsed.success) {
+        console.warn(
+          `[generateCareerAnalysis] schema fail after normalize (${llm.name}), retrying repair…`,
+          parsed.error.flatten()
+        );
+        const repaired = await callRepairJson(llm, raw, parsed.error.message);
+        const normalized2 = normalizeAnalysisResult(repaired);
+        parsed = analysisResultSchema.safeParse(normalized2);
+      }
+
       if (!parsed.success) {
         console.error(
           `[generateCareerAnalysis] schema validation failed (${llm.name})`,
@@ -41,10 +55,13 @@ export async function generateCareerAnalysis(
           result: buildMockAnalysis(input),
           provider: llm.name,
           usedFallback: true,
-          error: "Resposta da IA inválida; usando análise simulada.",
+          error: "Resposta da IA inválida após normalização; usando análise simulada.",
         };
       }
-      console.info(`[generateCareerAnalysis] ok provider=${llm.name} score=${parsed.data.summary.overall_score}`);
+
+      console.info(
+        `[generateCareerAnalysis] ok provider=${llm.name} score=${parsed.data.summary.overall_score}`
+      );
       return { result: parsed.data, provider: llm.name, usedFallback: false };
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erro na API de IA";
@@ -95,6 +112,25 @@ function resolveLlmConfig(provider: string): LlmConfig | null {
   return null;
 }
 
+function extractJsonContent(content: string): unknown {
+  const cleaned = content
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "");
+
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    // tenta extrair o maior bloco { ... }
+    const start = cleaned.indexOf("{");
+    const end = cleaned.lastIndexOf("}");
+    if (start >= 0 && end > start) {
+      return JSON.parse(cleaned.slice(start, end + 1));
+    }
+    throw new Error("Resposta da IA não é JSON válido");
+  }
+}
+
 async function callChatCompletions(
   llm: LlmConfig,
   input: GenerateAnalysisInput
@@ -109,7 +145,7 @@ async function callChatCompletions(
     },
     body: JSON.stringify({
       model: llm.model,
-      temperature: 0.3,
+      temperature: 0.2,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
@@ -117,8 +153,12 @@ async function callChatCompletions(
           role: "user",
           content: `${userPrompt}
 
-## FORMATO DE SAÍDA
-Responda APENAS com um único objeto JSON válido (sem markdown, sem texto fora do JSON), seguindo o schema definido no prompt de sistema (summary, recommendations, fit_diagnostics, experience_translations, evolution_plan).`,
+## FORMATO DE SAÍDA (crítico)
+Retorne APENAS um objeto JSON com EXATAMENTE estas chaves de topo:
+summary (OBJETO), recommendations (ARRAY), fit_diagnostics (ARRAY), experience_translations (ARRAY), evolution_plan (ARRAY).
+Nunca coloque summary como string. Nunca omita action_title, action_description, action_type, priority, timeframe, success_criteria no plano.
+Nunca use acentos nos enums (use comunicacao, medio, alta — não comunicação/médio).
+priority_order deve ser número inteiro começando em 1.`,
         },
       ],
     }),
@@ -135,13 +175,97 @@ Responda APENAS com um único objeto JSON válido (sem markdown, sem texto fora 
   const content = data.choices?.[0]?.message?.content;
   if (!content) throw new Error(`Resposta vazia de ${llm.name}`);
 
-  // remove eventual fence ```json ... ```
-  const cleaned = content
-    .trim()
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/i, "");
+  return extractJsonContent(content);
+}
 
-  return JSON.parse(cleaned);
+/** Segunda chance: pede só reformatar o JSON sem reinventar o conteúdo. */
+async function callRepairJson(
+  llm: LlmConfig,
+  broken: unknown,
+  zodError: string
+): Promise<unknown> {
+  const res = await fetch(`${llm.baseUrl}/chat/completions`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${llm.apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: llm.model,
+      temperature: 0,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "Você corrige JSON de análise de carreira para um schema fixo. Não invente experiências. Só reestruture campos.",
+        },
+        {
+          role: "user",
+          content: `O JSON abaixo falhou na validação. Reescreva-o no schema correto.
+
+Erros Zod (resumo):
+${zodError.slice(0, 1500)}
+
+Schema obrigatório:
+{
+  "summary": {
+    "overall_score": number 0-100,
+    "confidence": "alta"|"media"|"baixa",
+    "general_diagnosis": string,
+    "main_strength": string,
+    "main_gap": string,
+    "next_best_action": string,
+    "suggested_roles": string[]
+  },
+  "recommendations": [{
+    "category": "competencia"|"comunicacao"|"evidencia"|"posicionamento",
+    "title": string, "description": string,
+    "impact": "alto"|"medio"|"baixo",
+    "effort": "alto"|"medio"|"baixo",
+    "urgency": "alta"|"media"|"baixa",
+    "priority_order": number,
+    "suggested_action": string, "reasoning": string,
+    "example_text": string opcional
+  }],
+  "fit_diagnostics": [{
+    "fit_type": "cargo_alvo"|"vaga_especifica",
+    "score": number, "level": string,
+    "strengths": string[], "gaps": string[], "risks": string[],
+    "recommendation": string, "reasoning": string
+  }],
+  "experience_translations": [{
+    "original_text": string, "identified_issue": string,
+    "implicit_skills": string[], "suggested_text": string,
+    "market_language_terms": string[], "authenticity_warning": string
+  }],
+  "evolution_plan": [{
+    "action_title": string, "action_description": string,
+    "action_type": string, "priority": "alta"|"media"|"baixa",
+    "timeframe": string, "success_criteria": string
+  }]
+}
+
+JSON a corrigir:
+${JSON.stringify(broken).slice(0, 12000)}
+
+Responda só o JSON corrigido.`,
+        },
+      ],
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`${llm.name} repair HTTP ${res.status}: ${body.slice(0, 200)}`);
+  }
+
+  const data = (await res.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  const content = data.choices?.[0]?.message?.content;
+  if (!content) throw new Error("Repair vazio");
+  return extractJsonContent(content);
 }
 
 export { SYSTEM_PROMPT, buildUserPrompt };

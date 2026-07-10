@@ -71,10 +71,80 @@ Use um destes em action_type:
 - Revisar posicionamento
 - Analisar nova vaga
 
-## SAÍDA
+## SAÍDA (JSON OBRIGATÓRIO — formato exato)
 
-Responda APENAS com JSON válido no schema solicitado. Não inclua markdown nem texto fora do JSON.
-Se wants_role_suggestions for true, preencha suggested_roles com 2 a 3 cargos; caso contrário, array vazio.
-Sempre inclua ao menos um fit_diagnostic de fit_type "cargo_alvo".
-Inclua fit_type "vaga_especifica" somente se houver descrição de vaga.
+Responda APENAS com um único objeto JSON válido. Sem markdown, sem \`\`\`, sem texto fora do JSON.
+
+Regras de estrutura (NÃO IGNORE):
+- "summary" DEVE ser um OBJETO (nunca string).
+- "recommendations", "fit_diagnostics", "experience_translations", "evolution_plan" DEVEM ser ARRAYS.
+- strengths, gaps, risks, implicit_skills, market_language_terms DEVEM ser arrays de strings (nunca objetos).
+- recommendation e reasoning em fit_diagnostics DEVEM ser strings (nunca objetos).
+- Enums SEM acento: competencia|comunicacao|evidencia|posicionamento; alto|medio|baixo; alta|media|baixa.
+- Se wants_role_suggestions for true: suggested_roles com 2–3 cargos; senão [].
+- Sempre ≥1 item em recommendations, fit_diagnostics (com fit_type "cargo_alvo") e evolution_plan.
+- Inclua fit_type "vaga_especifica" somente se houver descrição de vaga.
+- experience_translations: 1–3 itens se houver texto de CV/LinkedIn; cada um com authenticity_warning string.
+
+Esqueleto obrigatório (preencha com conteúdo real):
+
+{
+  "summary": {
+    "overall_score": 0,
+    "confidence": "media",
+    "general_diagnosis": "...",
+    "main_strength": "...",
+    "main_gap": "...",
+    "next_best_action": "...",
+    "suggested_roles": []
+  },
+  "recommendations": [
+    {
+      "category": "comunicacao",
+      "title": "...",
+      "description": "...",
+      "impact": "alto",
+      "effort": "medio",
+      "urgency": "alta",
+      "priority_order": 1,
+      "suggested_action": "...",
+      "reasoning": "...",
+      "example_text": "opcional"
+    }
+  ],
+  "fit_diagnostics": [
+    {
+      "fit_type": "cargo_alvo",
+      "score": 0,
+      "level": "Boa aderência",
+      "strengths": ["..."],
+      "gaps": ["..."],
+      "risks": ["..."],
+      "present_skills": ["..."],
+      "missing_skills": ["..."],
+      "recommendation": "Aplicar com ajustes.",
+      "reasoning": "..."
+    }
+  ],
+  "experience_translations": [
+    {
+      "original_text": "...",
+      "identified_issue": "...",
+      "implicit_skills": ["..."],
+      "suggested_text": "...",
+      "market_language_terms": ["..."],
+      "authenticity_warning": "Use só se for verdade na sua trajetória. Não invente métricas."
+    }
+  ],
+  "evolution_plan": [
+    {
+      "action_title": "...",
+      "action_description": "...",
+      "action_type": "Ajustar currículo",
+      "priority": "alta",
+      "timeframe": "7 dias",
+      "success_criteria": "..."
+    }
+  ]
+}
 `;
