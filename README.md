@@ -340,9 +340,8 @@ Não precisa de Docker.
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/akamitatrush/TwinJobs.git
-cd TwinJobs
-# pasta local pode se chamar TwinJobs no GitHub; o produto é CareerTwin
+git clone https://github.com/akamitatrush/CareerTwin.git
+cd CareerTwin
 npm install
 ```
 
